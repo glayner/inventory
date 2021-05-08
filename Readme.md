@@ -47,15 +47,15 @@ transactions:
 
 ### Funcionalidades:
 ##### Backend:
-[ ] Crud de categoria
-[ ] Crud de produto
-[ ] Inserção de nova compra de produto
-[ ] Inserção de nova venda de produto
-[ ] Listagem tabela PEPS por produto
+- [ ] Crud de categoria
+- [ ] Crud de produto
+- [ ] Inserção de nova compra de produto
+- [ ] Inserção de nova venda de produto
+- [ ] Listagem tabela PEPS por produto
 
 ##### Frontend:
-[ ] Tela de categorias
-[ ] Tela de produtos por categoria
-[ ] Tela de inserção de compra do produto
-[ ] Tela de inserção de venda do produto
-[ ] Tela de tabela PEPS do produto
+- [ ] Tela de categorias
+- [ ] Tela de produtos por categoria
+- [ ] Tela de inserção de compra do produto
+- [ ] Tela de inserção de venda do produto
+- [ ] Tela de tabela PEPS do produto
