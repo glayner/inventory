@@ -1,17 +1,64 @@
-import ICategoryRepository from '@modules/manage/repositories/ICategoryRepository';
+import ICreateProductDTO from '@modules/manage/dtos/ICreateProductDTO';
+import IProductRepository from '@modules/manage/repositories/IProductRepository';
 import { getRepository, Repository } from 'typeorm';
-import Category from '../entities/Category';
+import Product from '../entities/Product';
 
-class CategoryRepository implements ICategoryRepository {
-  private ormRepository: Repository<Category>;
+class ProductRepository implements IProductRepository {
+  private ormRepository: Repository<Product>;
 
   constructor() {
-    this.ormRepository = getRepository(Category);
+    this.ormRepository = getRepository(Product);
   }
 
-  public async list(): Promise<Category[]> {
+  public async list(): Promise<Product[]> {
     const products = await this.ormRepository.find();
     return products;
   }
+
+  public async findByDescription(
+    description: string,
+  ): Promise<Product | undefined> {
+    const product = await this.ormRepository.findOne({ description });
+
+    return product;
+  }
+
+  public async findById(id: string): Promise<Product | undefined> {
+    const product = await this.ormRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    });
+
+    return product;
+  }
+
+  public async findByIdWithTransactions(
+    id: string,
+  ): Promise<Product | undefined> {
+    const product = await this.ormRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.transactions', 'transactions')
+      .where('product.id = :productId', { productId: id })
+      .orderBy('transactions.date')
+      .getOne();
+
+    return product;
+  }
+
+  public async create({
+    description,
+    category,
+  }: ICreateProductDTO): Promise<Product> {
+    const product = this.ormRepository.create({ description, category });
+
+    await this.ormRepository.save(product);
+
+    return product;
+  }
+
+  public async save(product: Product): Promise<Product> {
+    await this.ormRepository.save(product);
+    return product;
+  }
 }
-export default CategoryRepository;
+export default ProductRepository;

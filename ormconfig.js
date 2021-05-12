@@ -5,6 +5,7 @@ module.exports = {
   "username": "postgres",
   "password": "password",
   "database": "inventory",
+  "logging": true,
   "entities":[
     "./src/modules/**/infra/typeorm/entities/*.ts"
   ],

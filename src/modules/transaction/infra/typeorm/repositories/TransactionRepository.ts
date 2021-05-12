@@ -13,5 +13,15 @@ class TransactionRepository implements ITransactionRepository {
     const transactions = await this.ormRepository.find();
     return transactions;
   }
+
+  public async listByProductId(productId: string): Promise<Transaction[]> {
+    const transactions = await this.ormRepository.find({
+      relations: ['product'],
+      where: { 'product.id': productId },
+      order: { date: 'ASC' },
+    });
+
+    return transactions;
+  }
 }
 export default TransactionRepository;

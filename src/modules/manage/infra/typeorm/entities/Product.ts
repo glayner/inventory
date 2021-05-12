@@ -1,9 +1,11 @@
+import Transaction from '@modules/transaction/infra/typeorm/entities/Transaction';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,6 +22,9 @@ class Product {
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @OneToMany(() => Transaction, transaction => transaction.product)
+  transactions: Transaction[];
 
   @CreateDateColumn()
   created_at: Date;
