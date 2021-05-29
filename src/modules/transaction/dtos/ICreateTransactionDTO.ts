@@ -1,0 +1,25 @@
+import Product from '@modules/manage/infra/typeorm/entities/Product';
+
+export default interface ICreateTransactionDTO {
+  date: Date;
+
+  purchased_qnt?: number;
+
+  purchased_unt?: number;
+
+  purchased_amt?: number;
+
+  sold_qnt?: number;
+
+  sold_unt?: number;
+
+  sold_amt?: number;
+
+  balance_qnt: number;
+
+  balance_unt: number;
+
+  balance_amt: number;
+
+  product: Product;
+}
