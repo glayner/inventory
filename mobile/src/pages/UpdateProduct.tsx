@@ -2,16 +2,19 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Alert, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 import IProps from '../interfaces/IProps';
 import styles from './styles';
 
-function CreateCategory({ navigation }: IProps) {
-  const [description, setDescription] = useState("")
+
+function UpdateCategory({ navigation, route }: IProps) {
+  const { description: defaultDescription, productId, categoryId } = route.params;
+  const [description, setDescription] = useState(`${defaultDescription}`)
 
   async function sendForm() {
     if (!description) {
       if (Platform.OS === 'web') {
-        alert("Insira a descrição da categoria!")
+        alert("Insira a descrição do produto!")
         return
       } else {
         Alert.alert("Erro", `Preencha a descrição`, [
@@ -25,23 +28,23 @@ function CreateCategory({ navigation }: IProps) {
       }
     }
 
-    await axios.post('http://localhost:3001/manage/category', { description })
-      .then(response => {
+    await axios.put(`http://localhost:3001/manage/product/${productId}`, { description, categoryId })
+      .then(() => {
         if (Platform.OS === 'web') {
-          alert("Cadastro da categoria efetuado com sucesso!!")
-          navigation.navigate("ListCategory")
+          alert("Cadastro do produto alterado com sucesso!!")
+          navigation.navigate("ListProduct", { categoryId })
           return
         }
 
         Alert.alert(
           "Sucesso",
-          "Cadastro da categoria efetuado com sucesso!!",
+          "Cadastro do produto alterado com sucesso!!",
           [
             {
               text: "",
               onPress: () => { },
             },
-            { text: "OK", onPress: () => navigation.navigate("ListCategory") },
+            { text: "OK", onPress: () => navigation.navigate("ListProduct", { categoryId }) },
           ],
           { cancelable: false }
         );
@@ -70,13 +73,13 @@ function CreateCategory({ navigation }: IProps) {
           style={styles.inputs}
           autoCapitalize="words"
           value={description}
-          placeholder="Descrição da categoria"
+          placeholder="Descrição do produto"
           onChangeText={(text) => setDescription(text)}
         />
 
         <RectButton onPress={sendForm} style={styles.button}>
           <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Criar categoria
+            Alterar produto
               </Text>
         </RectButton>
       </View>
@@ -84,4 +87,4 @@ function CreateCategory({ navigation }: IProps) {
   </ScrollView>;
 }
 
-export default CreateCategory;
+export default UpdateCategory;

@@ -5,7 +5,8 @@ import { RectButton } from 'react-native-gesture-handler';
 import IProps from '../interfaces/IProps';
 import styles from './styles';
 
-function CreateCategory({ navigation }: IProps) {
+function CreateProduct({ navigation, route }: IProps) {
+  const { categoryId} = route.params;
   const [description, setDescription] = useState("")
 
   async function sendForm() {
@@ -84,4 +85,4 @@ function CreateCategory({ navigation }: IProps) {
   </ScrollView>;
 }
 
-export default CreateCategory;
+export default CreateProduct;

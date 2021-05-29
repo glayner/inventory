@@ -2,11 +2,14 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Alert, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 import IProps from '../interfaces/IProps';
 import styles from './styles';
 
-function CreateCategory({ navigation }: IProps) {
-  const [description, setDescription] = useState("")
+
+function UpdateCategory({ navigation, route }: IProps) {
+  const {description: defaultDescription, categoryId} = route.params;
+  const [description, setDescription] = useState(`${defaultDescription}`)
 
   async function sendForm() {
     if (!description) {
@@ -25,17 +28,17 @@ function CreateCategory({ navigation }: IProps) {
       }
     }
 
-    await axios.post('http://localhost:3001/manage/category', { description })
+    await axios.put(`http://localhost:3001/manage/category/${categoryId}`, { description })
       .then(response => {
         if (Platform.OS === 'web') {
-          alert("Cadastro da categoria efetuado com sucesso!!")
+          alert("Cadastro da categoria alterado com sucesso!!")
           navigation.navigate("ListCategory")
           return
         }
 
         Alert.alert(
           "Sucesso",
-          "Cadastro da categoria efetuado com sucesso!!",
+          "Cadastro da categoria alterado com sucesso!!",
           [
             {
               text: "",
@@ -76,7 +79,7 @@ function CreateCategory({ navigation }: IProps) {
 
         <RectButton onPress={sendForm} style={styles.button}>
           <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Criar categoria
+            Alterar categoria
               </Text>
         </RectButton>
       </View>
@@ -84,4 +87,4 @@ function CreateCategory({ navigation }: IProps) {
   </ScrollView>;
 }
 
-export default CreateCategory;
+export default UpdateCategory;
