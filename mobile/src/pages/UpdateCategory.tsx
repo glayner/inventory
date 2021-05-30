@@ -8,7 +8,7 @@ import styles from './styles';
 
 
 function UpdateCategory({ navigation, route }: IProps) {
-  const {description: defaultDescription, categoryId} = route.params;
+  const { description: defaultDescription, categoryId } = route.params;
   const [description, setDescription] = useState(`${defaultDescription}`)
 
   async function sendForm() {
@@ -68,21 +68,19 @@ function UpdateCategory({ navigation, route }: IProps) {
 
   return <ScrollView showsVerticalScrollIndicator={false} >
     <View style={styles.container}>
-      <View style={styles.body}>
-        <TextInput
-          style={styles.inputs}
-          autoCapitalize="words"
-          value={description}
-          placeholder="Descrição da categoria"
-          onChangeText={(text) => setDescription(text)}
-        />
+      <TextInput
+        style={styles.inputs}
+        autoCapitalize="words"
+        value={description}
+        placeholder="Descrição da categoria"
+        onChangeText={(text) => setDescription(text)}
+      />
 
-        <RectButton onPress={sendForm} style={styles.button}>
-          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Alterar categoria
+      <RectButton onPress={sendForm} style={styles.button}>
+        <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+          Alterar categoria
               </Text>
-        </RectButton>
-      </View>
+      </RectButton>
     </View>
   </ScrollView>;
 }

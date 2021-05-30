@@ -68,21 +68,19 @@ function UpdateCategory({ navigation, route }: IProps) {
 
   return <ScrollView showsVerticalScrollIndicator={false} >
     <View style={styles.container}>
-      <View style={styles.body}>
-        <TextInput
-          style={styles.inputs}
-          autoCapitalize="words"
-          value={description}
-          placeholder="Descrição do produto"
-          onChangeText={(text) => setDescription(text)}
-        />
+      <TextInput
+        style={styles.inputs}
+        autoCapitalize="words"
+        value={description}
+        placeholder="Descrição do produto"
+        onChangeText={(text) => setDescription(text)}
+      />
 
-        <RectButton onPress={sendForm} style={styles.button}>
-          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Alterar produto
+      <RectButton onPress={sendForm} style={styles.button}>
+        <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+          Alterar produto
               </Text>
-        </RectButton>
-      </View>
+      </RectButton>
     </View>
   </ScrollView>;
 }
