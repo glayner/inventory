@@ -15,6 +15,16 @@ class TransactionRepository implements ITransactionRepository {
     return transactions;
   }
 
+  public async findById(
+    transactionId: string,
+  ): Promise<Transaction | undefined> {
+    const transaction = await this.ormRepository.findOne({
+      where: { id: transactionId },
+      relations: ['product'],
+    });
+    return transaction;
+  }
+
   public async listByProductId(productId: string): Promise<Transaction[]> {
     const transactions = await this.ormRepository.find({
       relations: ['product'],
@@ -68,6 +78,10 @@ class TransactionRepository implements ITransactionRepository {
     await this.ormRepository.save(transaction);
 
     return transaction;
+  }
+
+  public async delete(transaction: Transaction): Promise<void> {
+    await this.ormRepository.remove(transaction);
   }
 }
 export default TransactionRepository;

@@ -8,4 +8,5 @@ export default interface ICategoryRepository {
   findByIdWithProducts(id: string): Promise<Category | undefined>;
   create(data: ICreateCategoryDTO): Promise<Category>;
   save(category: Category): Promise<Category>;
+  delete(category: Category): Promise<void>;
 }

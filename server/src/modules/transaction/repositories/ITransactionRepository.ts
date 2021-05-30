@@ -5,5 +5,7 @@ export default interface ITransactionRepository {
   list(): Promise<Transaction[]>;
   listByProductId(productId: string): Promise<Transaction[]>;
   findLastByProductId(productId: string): Promise<Transaction | undefined>;
+  findById(transactionId: string): Promise<Transaction | undefined>;
   create(data: ICreateTransactionDTO): Promise<Transaction>;
+  delete(transaction: Transaction): Promise<void>;
 }

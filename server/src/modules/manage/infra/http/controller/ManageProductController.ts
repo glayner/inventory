@@ -1,4 +1,5 @@
 import ProductCreateService from '@modules/manage/service/ProductCreateService';
+import ProductDeleteService from '@modules/manage/service/ProductDeleteService';
 import ProductUpdateService from '@modules/manage/service/ProductUpdateService';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
@@ -25,6 +26,17 @@ export default class ManageProductController {
       productId,
       categoryId,
       description,
+    });
+
+    return response.json(product);
+  }
+
+  async delete(request: Request, response: Response): Promise<Response> {
+    const { productId } = request.params;
+
+    const productDeleteService = container.resolve(ProductDeleteService);
+    const product = await productDeleteService.execute({
+      productId,
     });
 
     return response.json(product);

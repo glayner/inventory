@@ -27,7 +27,9 @@ class ProductUpdateService {
     description,
     categoryId,
   }: IRequestDTO): Promise<Product> {
-    const product = await this.productRepository.findById(productId);
+    const product = await this.productRepository.findByIdWithCategory(
+      productId,
+    );
     if (!product) {
       throw new AppError('Produto não encontrado');
     }
