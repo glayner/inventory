@@ -1,12 +1,16 @@
 const colors = {
   FONT_PRIMARY: "#606060",
-  COLOR_PRIMARY: "#91C145",
-  COLOR_SECUNDARY: "#77A037",
-  BUTTONS_COLOR: "#0D9BD6",
+  COLOR_PRIMARY: "#9EA3B5",
+  COLOR_SECUNDARY: "#3A488A",
+  BUTTONS_COLOR: "#808EB7",
   ICONS: "#9D9B9B",
-  BACKGROUND: "#F8F8F8",
+  BACKGROUND: "#F1ECCE",
   WHITE: "#FFF",
-  RED: "#e02041",
+  RED: "#d9534f",
+  BUY: "#rgba(92, 184, 92, 1)",
+  BUYLOW: "rgba(92, 184, 92, 0.9)",
+  SALE: "#CA4D2A",
+  SALELOW: "rgba(202, 77, 42, 0.9)"
 };
 
 export default colors;

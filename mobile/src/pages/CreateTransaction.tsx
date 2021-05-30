@@ -106,73 +106,77 @@ function CreateTransaction({ navigation, route }: IProps) {
   if (isSold) {
     return <ScrollView showsVerticalScrollIndicator={false} >
       <View style={styles.container}>
-        <TouchableOpacity style={styles.TransactionBtn} onPress={() => setType()}>
-          <Feather name="arrow-down-circle" size={widthPercentageToDP("4%")} color="#77A037" /><Text style={{ fontSize: widthPercentageToDP("4%") }}>Compra</Text>
-        </TouchableOpacity>
+        <View style={styles.createBody}>
+          <TouchableOpacity style={styles.TransactionBtn} onPress={() => setType()}>
+            <Feather name="refresh-ccw" size={20} color="#3A488A" /><Text>Compra</Text>
+          </TouchableOpacity>
 
-        <TextInput
-          style={styles.inputs}
-          placeholder="Data da venda"
-          keyboardType="number-pad"
-          maxLength={19}
-          onChangeText={(text) => setDate(masking(text, "99/99/9999 99:99:99"))}
-          value={date}
-        />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Data da venda"
+            keyboardType="number-pad"
+            maxLength={19}
+            onChangeText={(text) => setDate(masking(text, "99/99/9999 99:99:99"))}
+            value={date}
+          />
 
-        <TextInput
-          style={styles.inputs}
-          placeholder="Quantidade vendida"
-          keyboardType="number-pad"
-          maxLength={3}
-          onChangeText={(text) => setSoldQnt(masking(text, "999"))}
-          value={`${soldQnt}`}
-        />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Quantidade vendida"
+            keyboardType="number-pad"
+            maxLength={3}
+            onChangeText={(text) => setSoldQnt(masking(text, "999"))}
+            value={`${soldQnt}`}
+          />
 
-        <RectButton onPress={sendForm} style={styles.button}>
-          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Cadastrar Venda
+          <RectButton onPress={sendForm} style={styles.button}>
+            <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+              Cadastrar Venda
               </Text>
-        </RectButton>
+          </RectButton>
+        </View>
       </View>
     </ScrollView>;
   } else {
     return <ScrollView showsVerticalScrollIndicator={false} >
       <View style={styles.container}>
-        <TouchableOpacity style={styles.TransactionBtn} onPress={() => setType()}>
-          <Feather name="arrow-up-circle" size={widthPercentageToDP("4%")} color="#e02041" /><Text style={{ fontSize: widthPercentageToDP("4%") }}>Venda</Text>
-        </TouchableOpacity>
+        <View style={styles.createBody}>
+          <TouchableOpacity style={styles.TransactionBtn} onPress={() => setType()}>
+          <Feather name="refresh-ccw" size={20} color="#3A488A" /><Text>Venda</Text>
+          </TouchableOpacity>
 
-        <TextInput
-          style={styles.inputs}
-          placeholder="Data da venda"
-          keyboardType="number-pad"
-          maxLength={19}
-          onChangeText={(text) => setDate(masking(text, "99/99/9999 99:99:99"))}
-          value={date}
-        />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Data da venda"
+            keyboardType="number-pad"
+            maxLength={19}
+            onChangeText={(text) => setDate(masking(text, "99/99/9999 99:99:99"))}
+            value={date}
+          />
 
-        <TextInput
-          style={styles.inputs}
-          placeholder="Quantidade comprada"
-          keyboardType="number-pad"
-          maxLength={3}
-          onChangeText={(text) => setPurchasedQnt(masking(text, "999"))}
-          value={`${purchasedQnt}`}
-        />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Quantidade comprada"
+            keyboardType="number-pad"
+            maxLength={3}
+            onChangeText={(text) => setPurchasedQnt(masking(text, "999"))}
+            value={`${purchasedQnt}`}
+          />
 
-        <TextInput
-          style={styles.inputs}
-          placeholder="Valor Unitario da compra"
-          keyboardType="number-pad"
-          maxLength={6}
-          onChangeText={(text) => setPurchasedUnt(masking(text, "99.99"))}
-          value={`${purchasedUnt}`}
-        />
-        <RectButton onPress={sendForm} style={styles.button}>
-          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-            Cadastrar Compra
+          <TextInput
+            style={styles.inputs}
+            placeholder="Valor Unitario da compra"
+            keyboardType="number-pad"
+            maxLength={6}
+            onChangeText={(text) => setPurchasedUnt(masking(text, "99.99"))}
+            value={`${purchasedUnt}`}
+          />
+          <RectButton onPress={sendForm} style={styles.button}>
+            <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+              Cadastrar Compra
               </Text>
-        </RectButton>
+          </RectButton>
+        </View>
       </View>
     </ScrollView>;
   }

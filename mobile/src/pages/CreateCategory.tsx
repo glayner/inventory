@@ -65,19 +65,21 @@ function CreateCategory({ navigation }: IProps) {
 
   return <ScrollView showsVerticalScrollIndicator={false} >
     <View style={styles.container}>
-      <TextInput
-        style={styles.inputs}
-        autoCapitalize="words"
-        value={description}
-        placeholder="Descrição da categoria"
-        onChangeText={(text) => setDescription(text)}
-      />
+      <View style={styles.createBody}>
+        <TextInput
+          style={styles.inputs}
+          autoCapitalize="words"
+          value={description}
+          placeholder="Descrição da categoria"
+          onChangeText={(text) => setDescription(text)}
+        />
 
-      <RectButton onPress={sendForm} style={styles.button}>
-        <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-          Criar categoria
+        <RectButton onPress={sendForm} style={styles.button}>
+          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+            Criar categoria
               </Text>
-      </RectButton>
+        </RectButton>
+      </View>
     </View>
   </ScrollView>;
 }

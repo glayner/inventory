@@ -16,16 +16,20 @@ export default function ListTransaction({ route, navigation }: IProps) {
   const [product, setProduct] = useState<IProduct>();
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
 
+  async function pupulateTransaction() {
+    axios.get(`http://localhost:3001/search/product/${productId}`).then(res => {
+      const transactionsData = res.data.transactions;
+      setTransactions(transactionsData)
+
+      const productData = res.data;
+      delete productData.products
+      setProduct(productData)
+    })
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      axios.get(`http://localhost:3001/search/product/${productId}`).then(res => {
-        const transactionsData = res.data.transactions;
-        setTransactions(transactionsData)
-
-        const productData = res.data;
-        delete productData.products
-        setProduct(productData)
-      })
+      pupulateTransaction()
     });
     return unsubscribe;
   }, [navigation]);
@@ -35,7 +39,7 @@ export default function ListTransaction({ route, navigation }: IProps) {
       .then(() => {
         if (Platform.OS === 'web') {
           alert("Transação excluida com sucesso!!")
-          navigation.navigate("ListCategory")
+          pupulateTransaction()
           return
         }
 
@@ -47,7 +51,7 @@ export default function ListTransaction({ route, navigation }: IProps) {
               text: "",
               onPress: () => { },
             },
-            { text: "OK", onPress: () => navigation.navigate("ListCategory") },
+            { text: "OK", onPress: () => pupulateTransaction() },
           ],
           { cancelable: false }
         );
@@ -69,106 +73,104 @@ export default function ListTransaction({ route, navigation }: IProps) {
       })
   }
 
+  return (<ScrollView horizontal>
+    <View style={styles.container}>
+      <View style={styles.body}>
+        <Text style={styles.title}>Produto: {product?.description}</Text>
+
+        <TouchableOpacity
+          style={styles.createBtn}
+          onPress={() => navigation.navigate('CreateTransaction', {
+            productId
+          })}
+        >Criar nova transação</TouchableOpacity>
+
+        <DataTable style={styles.table} >
+
+          <DataTable.Row>
+            <DataTable.Cell style={styles.firstTitleHeader}>Data</DataTable.Cell>
+            <DataTable.Cell style={styles.titleBuySale}>Compra e venda</DataTable.Cell>
+            <DataTable.Cell style={styles.titleTotal}>Total</DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+
+            <DataTable.Title style={styles.firstTitleHeader}> </DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>QNT</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>UNT</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>TOTAL</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>QNT</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>UNT</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>TOTAL</DataTable.Title>
+            <DataTable.Title style={styles.titleHeader}>Excluir</DataTable.Title>
+
+          </DataTable.Row>
 
 
-  return (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Produto: {product?.description}</Text>
-    <Button
-      title="Criar nova transação"
-      onPress={() => navigation.navigate('CreateTransaction', {
-        productId
-      })}
-    />
-    <ScrollView horizontal >
-      <DataTable style={styles.table} >
 
-        <DataTable.Row>
-          <DataTable.Cell style={styles.titleHeader}>Data</DataTable.Cell>
-          <DataTable.Cell style={styles.titleHeader}>Compra e venda</DataTable.Cell>
-          <DataTable.Cell style={styles.titleHeader}>Total</DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
+          <FlatList
+            data={transactions}
+            keyExtractor={transaction => transaction.id}
+            renderItem={({ item: transaction, index }) => {
+              let styleRow: 'saleRow' | 'buyRow'
+              let styleFirstCol: 'firstSaleCol' | 'firstBuyCol'
+              let styleCol: 'saleCol' | 'buyCol'
+              let styleColLow: 'saleColLow' | 'buyColLow'
+              let dataQnt: 'sold_qnt' | 'purchased_qnt'
+              let dataUnt: 'sold_unt' | 'purchased_unt'
+              let dataAmt: 'sold_amt' | 'purchased_amt'
 
-          <DataTable.Title style={styles.titleHeader}>Data</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>QNT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>UNT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>AMT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>QNT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>UNT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>AMT</DataTable.Title>
-          <DataTable.Title style={styles.titleHeader}>Excluir</DataTable.Title>
+              if (transaction.sold_qnt && transaction.sold_qnt > 0) {
+                styleRow = 'saleRow'
+                styleFirstCol = 'firstSaleCol'
+                styleCol = 'saleCol'
+                styleColLow = 'saleColLow'
+                dataQnt = 'sold_qnt'
+                dataUnt = 'sold_unt'
+                dataAmt = 'sold_amt'
+              } else {
+                styleRow = 'buyRow'
+                styleFirstCol = 'firstBuyCol'
+                styleCol = 'buyCol'
+                styleColLow = 'buyColLow'
+                dataQnt = 'purchased_qnt'
+                dataUnt = 'purchased_unt'
+                dataAmt = 'purchased_amt'
+              }
 
-        </DataTable.Row>
-
-
-
-        <FlatList
-          data={transactions}
-          keyExtractor={transaction => transaction.id}
-          renderItem={({ item: transaction, index }) => {
-            if (transaction.sold_qnt && transaction.sold_qnt > 0) {
               if (index === (transactions.length - 1)) {
-                return <DataTable.Row style={styles.redRow}>
-                  <DataTable.Cell style={styles.redCol}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redColLow}>{transaction.sold_qnt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redCol} >{transaction.sold_unt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redColLow}>{transaction.sold_amt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redCol}>{transaction.balance_qnt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redColLow}>{transaction.balance_unt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.redCol}>{transaction.balance_amt}</DataTable.Cell>
-                  <DataTable.Cell style={styles.redColLow}>
+                return <DataTable.Row style={styles[styleRow]}>
+                  <DataTable.Cell style={styles[styleFirstCol]}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleColLow]}>{transaction[dataQnt]}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleCol]} >{transaction[dataUnt]}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleColLow]}>{transaction[dataAmt]}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleCol]}>{transaction.balance_qnt}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleColLow]}>{transaction.balance_unt}</DataTable.Cell>
+                  <DataTable.Cell numeric style={styles[styleCol]}>{transaction.balance_amt}</DataTable.Cell>
+                  <DataTable.Cell style={styles[styleColLow]}>
                     <TouchableOpacity onPress={() => deleteTransaction(transaction.id)}>
                       <Feather name="trash-2" size={25} color="#000" />
                     </TouchableOpacity>
                   </DataTable.Cell>
                 </DataTable.Row>
               }
-              return <DataTable.Row style={styles.redRow}>
-                <DataTable.Cell style={styles.redCol}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redColLow}>{transaction.sold_qnt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redCol} >{transaction.sold_unt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redColLow}>{transaction.sold_amt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redCol}>{transaction.balance_qnt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redColLow}>{transaction.balance_unt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.redCol}>{transaction.balance_amt}</DataTable.Cell>
-                <DataTable.Cell style={styles.redColLow} > </DataTable.Cell>
-              </DataTable.Row>
 
-            } else {
-              if (index === (transactions.length - 1)) {
-                return <DataTable.Row style={styles.greenRow}>
-                  <DataTable.Cell style={styles.greenCol}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenColLow} >{transaction.purchased_qnt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenCol}>{transaction.purchased_unt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenColLow}>{transaction.purchased_amt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenCol}>{transaction.balance_qnt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenColLow}>{transaction.balance_unt}</DataTable.Cell>
-                  <DataTable.Cell numeric style={styles.greenCol}>{transaction.balance_amt}</DataTable.Cell>
-                  <DataTable.Cell style={styles.greenColLow}>
-                    <TouchableOpacity onPress={() => deleteTransaction(transaction.id)}>
-                      <Feather name="trash-2" size={25} color="#e02041" />
-                    </TouchableOpacity>
-                  </DataTable.Cell>
-                </DataTable.Row>
-              }
-              return <DataTable.Row style={styles.greenRow}>
-                <DataTable.Cell style={styles.greenCol}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenColLow} >{transaction.purchased_qnt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenCol}>{transaction.purchased_unt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenColLow}>{transaction.purchased_amt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenCol}>{transaction.balance_qnt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenColLow}>{transaction.balance_unt}</DataTable.Cell>
-                <DataTable.Cell numeric style={styles.greenCol}>{transaction.balance_amt}</DataTable.Cell>
-                <DataTable.Cell style={styles.greenColLow} > </DataTable.Cell>
+              return <DataTable.Row style={styles[styleRow]}>
+                <DataTable.Cell style={styles[styleFirstCol]}>{format(new Date(transaction.date), 'dd/MM/yyyy HH:mm:ss')}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleColLow]}>{transaction[dataQnt]}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleCol]} >{transaction[dataUnt]}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleColLow]}>{transaction[dataAmt]}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleCol]}>{transaction.balance_qnt}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleColLow]}>{transaction.balance_unt}</DataTable.Cell>
+                <DataTable.Cell numeric style={styles[styleCol]}>{transaction.balance_amt}</DataTable.Cell>
+                <DataTable.Cell style={styles[styleColLow]}> </DataTable.Cell>
               </DataTable.Row>
             }
-          }
-
-          }
-        />
-      </DataTable>
-    </ScrollView>
-  </View>
+            }
+          />
+        </DataTable>
+      </View>
+    </View>
+  </ScrollView>
   )
 }
 

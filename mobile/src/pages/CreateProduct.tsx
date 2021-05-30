@@ -66,19 +66,21 @@ function CreateProduct({ navigation, route }: IProps) {
 
   return <ScrollView showsVerticalScrollIndicator={false} >
     <View style={styles.container}>
-      <TextInput
-        style={styles.inputs}
-        autoCapitalize="words"
-        value={description}
-        placeholder="Descrição do produto"
-        onChangeText={(text) => setDescription(text)}
-      />
+      <View style={styles.createBody}>
+        <TextInput
+          style={styles.inputs}
+          autoCapitalize="words"
+          value={description}
+          placeholder="Descrição do produto"
+          onChangeText={(text) => setDescription(text)}
+        />
 
-      <RectButton onPress={sendForm} style={styles.button}>
-        <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
-          Criar produto
+        <RectButton onPress={sendForm} style={styles.button}>
+          <Text style={{ color: "#fff", fontFamily: "Lato_700Bold" }}>
+            Criar produto
               </Text>
-      </RectButton>
+        </RectButton>
+      </View>
     </View>
   </ScrollView>;
 }

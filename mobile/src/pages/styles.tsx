@@ -1,74 +1,137 @@
 import { StyleSheet } from "react-native";
-import { color } from "react-native-reanimated";
 import {
-  widthPercentageToDP,
-  heightPercentageToDP,
+  heightPercentageToDP as hp, widthPercentageToDP as wp
 } from "react-native-responsive-screen";
 import colors from "../components/Colors";
 
 
 export default StyleSheet.create({
   container: {
-    padding: heightPercentageToDP("5%"),
+    flex: 1,
+    width: wp("100%"),
+    flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
+    padding: hp("5%"),
+    // backgroundColor: "#000"
   },
+
+  body: {
+    backgroundColor: "#FFF",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: 'visible',
+    borderRadius: 15,
+    marginLeft: 150,
+    paddingHorizontal: wp("2%"),
+    paddingVertical: hp("10%"),
+  },
+
+  createBody: {
+    backgroundColor: "#FFF",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: 'visible',
+    borderRadius: 15,
+    paddingHorizontal: wp("2%"),
+    paddingVertical: hp("10%"),
+  },
+
   TransactionBtn: {
-    justifyContent: "center",
+    fontSize:14,
     alignItems: "center",
-    fontSize: widthPercentageToDP("4%"),
-    borderRadius: widthPercentageToDP("2%"),
-    width: widthPercentageToDP("30%"),
-    height: widthPercentageToDP("10%"),
-    backgroundColor: '#ccc',
-    fontFamily: "Poppins_400Bold",
+    justifyContent: "center",
+    borderRadius: 7,
+    width: wp("30%"),
+    maxWidth: "max-content",
+    padding: 3,
+    backgroundColor: colors.COLOR_PRIMARY,
+    // fontFamily: "Poppins_400Bold",
   },
-  
+
   title: {
     color: colors.COLOR_SECUNDARY,
     fontSize: 28,
-    fontFamily: "Poppins_700Bold",
+    // fontFamily: "Poppins_700Bold",
   },
+
   titleHeader: {
+    justifyContent: 'center',
+    maxWidth: 50
+  },
+
+  firstTitleHeader: {
+    justifyContent: 'center',
+    width: wp("85%"),
+    maxWidth: 130,
+  },
+
+  titleBuySale: {
+    justifyContent: 'center',
+    width: wp("85%"),
+    maxWidth: 150,
+  },
+
+  titleTotal: {
+    justifyContent: 'center',
+    width: wp("85%"),
+    maxWidth: 200,
+  },
+
+  saleRow: {
     justifyContent: 'center'
   },
-  redRow: {
-    justifyContent: 'center'
-  },
 
-  redCol: {
-    backgroundColor: 'rgba(224,32,65,0.9)',
+  firstSaleCol: {
+    backgroundColor: colors.SALE,
     justifyContent: 'center',
-    fontSize: widthPercentageToDP("4%"),
-    width: widthPercentageToDP("85%"),
-    maxWidth: 130
-  },
-  redColLow: {
-    backgroundColor: 'rgba(224,32,65,0.7)',
-    justifyContent: 'center',
-    fontSize: widthPercentageToDP("4%"),
-    width: widthPercentageToDP("85%"),
+    fontSize: wp("4%"),
+    width: wp("85%"),
     maxWidth: 130
   },
 
-  greenRow: {
-
+  saleCol: {
+    backgroundColor: colors.SALE,
+    justifyContent: 'center',
+    fontSize: wp("4%"),
+    width: wp("85%"),
+    maxWidth: 50
   },
 
-  greenCol: {
-    backgroundColor: 'rgba(145,193,69, 0.9)',
+  saleColLow: {
+    backgroundColor: colors.SALELOW,
     justifyContent: 'center',
-    fontSize: widthPercentageToDP("4%"),
-    width: widthPercentageToDP("85%"),
+    fontSize: wp("4%"),
+    width: wp("85%"),
+    maxWidth: 50
+  },
+
+  buyRow: {
+    
+  },
+
+  firstBuyCol: {
+    backgroundColor: colors.BUY,
+    justifyContent: 'center',
+    fontSize: wp("4%"),
+    width: wp("85%"),
     maxWidth: 130
   },
 
-  greenColLow: {
-    backgroundColor: 'rgba(145,193,69, 0.7)',
+  buyCol: {
+    backgroundColor: colors.BUY,
     justifyContent: 'center',
-    fontSize: widthPercentageToDP("4%"),
-    width: widthPercentageToDP("85%"),
-    maxWidth: 130
+    fontSize: wp("4%"),
+    width: wp("85%"),
+    maxWidth: 50
+  },
+
+  buyColLow: {
+    backgroundColor: colors.BUYLOW,
+    justifyContent: 'center',
+    fontSize: wp("4%"),
+    width: wp("85%"),
+    maxWidth: 50
   },
 
   table: {
@@ -77,22 +140,77 @@ export default StyleSheet.create({
 
   inputs: {
     color: colors.FONT_PRIMARY,
-    fontSize: widthPercentageToDP("4%"),
-    width: widthPercentageToDP("85%"),
+    fontSize: 14,
+    width: wp("85%"),
     borderBottomColor: "#BBBBBB",
-    fontFamily: "Poppins_400Regular",
+    // fontFamily: "Poppins_400Regular",
     borderBottomWidth: 2,
-    marginTop: heightPercentageToDP("2%"),
+    marginTop: hp("2%"),
+    maxWidth: 300,
   },
 
   button: {
     backgroundColor: colors.BUTTONS_COLOR,
-    padding: heightPercentageToDP("2%"),
-    marginTop: heightPercentageToDP("3%"),
+    padding: hp("2%"),
+    marginTop: hp("3%"),
     display: "flex",
     alignItems: "center",
-    width: widthPercentageToDP("80%"),
+    width: wp("80%"),
     borderRadius: 10,
-    marginLeft: heightPercentageToDP("3%"),
+    marginLeft: hp("3%"),
+    maxWidth: 300
   },
+  dataHeader:{},
+  dataHeaderFirstTitle:{
+    width: 250,
+    justifyContent: 'center',
+    alignItems: "center",
+  },
+  dataHeaderTitle:{
+    width: 80,
+    justifyContent: 'center',
+    alignItems: "center",
+  },
+  dataRow:{
+  },
+
+  dataFirsCel:{
+    justifyContent: 'center',
+    alignItems: "center",
+    color: colors.FONT_PRIMARY,
+    width: 250,
+  },
+
+  dataCel:{
+    justifyContent: 'center',
+    alignItems: "center",
+    color: colors.FONT_PRIMARY,
+    width: 80,
+  },
+
+  createBtn:{
+    borderWidth: 1,
+    borderColor: colors.BUTTONS_COLOR,
+    backgroundColor: colors.COLOR_PRIMARY,
+    color: colors.FONT_PRIMARY,
+    width: 'max-content',
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center",  
+    padding: hp("2%"),   
+    margin: hp("2%"),   
+  },
+
+  optionBtn:{
+    borderWidth: 1,
+    color: colors.FONT_PRIMARY,
+    borderColor: colors.BUTTONS_COLOR,
+    width: 'max-content',
+    borderRadius: 10,
+    display: "flex",
+    alignItems: "center", 
+    justifyContent: "center", 
+    padding: hp("1%"),   
+    // marginHorizontal: hp("5%"),   
+  }
 });

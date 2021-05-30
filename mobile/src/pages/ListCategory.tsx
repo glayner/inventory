@@ -1,9 +1,10 @@
 import { Feather } from "@expo/vector-icons";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, Platform, Text, View } from 'react-native';
+import { Alert, Button, FlatList, Platform, ScrollView, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
+import styles from "./styles";
 
 interface IProps {
   navigation: any
@@ -20,11 +21,15 @@ interface ICategories {
 export default function ListCategory({ navigation }: IProps) {
   const [categories, setCategories] = useState<ICategories[]>([])
 
+  async function populateCategory() {
+    axios.get('http://localhost:3001/search/category').then(res => {
+      setCategories(res.data)
+    })
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      axios.get('http://localhost:3001/search/category').then(res => {
-        setCategories(res.data)
-      })
+      populateCategory()
     });
 
     return unsubscribe;
@@ -35,7 +40,7 @@ export default function ListCategory({ navigation }: IProps) {
       .then(() => {
         if (Platform.OS === 'web') {
           alert("Categoria excluida com sucesso!!")
-          navigation.navigate("ListCategory")
+          populateCategory()
           return
         }
 
@@ -47,7 +52,7 @@ export default function ListCategory({ navigation }: IProps) {
               text: "",
               onPress: () => { },
             },
-            { text: "OK", onPress: () => navigation.navigate("ListCategory") },
+            { text: "OK", onPress: () => populateCategory() },
           ],
           { cancelable: false }
         );
@@ -69,47 +74,55 @@ export default function ListCategory({ navigation }: IProps) {
       })
   }
 
-  return (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Inventário PEPS</Text>
-    <Button
-      title="Criar Categoria"
-      onPress={() => navigation.navigate('CreateCategory')}
-    />
-    <DataTable>
-      <DataTable.Header>
-        <DataTable.Title> Descrição</DataTable.Title>
-        <DataTable.Title> Produtos</DataTable.Title>
-        <DataTable.Title> Editar</DataTable.Title>
-        <DataTable.Title> Excluir</DataTable.Title>
-      </DataTable.Header>
-      <FlatList
-        data={categories}
-        keyExtractor={category => category.id}
-        renderItem={({ item: category }) =>
-          <DataTable.Row>
-            <DataTable.Cell>{category.description}</DataTable.Cell>
-            <DataTable.Cell> <Button
-              title="Produtos"
-              onPress={() => navigation.navigate('ListProduct', {
-                categoryId: category.id,
-              })}
-            /></DataTable.Cell>
-            <DataTable.Cell><Button
-              title="Editar"
-              onPress={() => navigation.navigate('UpdateCategory', {
-                categoryId: category.id,
-                description: category.description
-              })}
-            /></DataTable.Cell>
-            <DataTable.Cell>
-              <TouchableOpacity onPress={() => deleteCategory(category.id)}>
-                <Feather name="trash-2" size={25} color="#e02041" />
-              </TouchableOpacity>
-            </DataTable.Cell>
-          </DataTable.Row>
-        }
-      />
-    </DataTable>
-  </View>)
+  return (<ScrollView horizontal showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <View style={styles.body}>
+
+        <Text style={styles.title}>Inventário PEPS</Text>
+
+        <TouchableOpacity
+          style={styles.createBtn}
+          onPress={() => navigation.navigate('CreateCategory')}
+        >Criar Categoria</TouchableOpacity>
+
+        <DataTable style={styles.table}>
+          <DataTable.Header style={styles.dataHeader}>
+            <DataTable.Title style={styles.dataHeaderFirstTitle}>Descrição</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Produtos</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Editar</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Excluir</DataTable.Title>
+          </DataTable.Header>
+          <FlatList
+            data={categories}
+            keyExtractor={category => category.id}
+            renderItem={({ item: category }) =>
+              <DataTable.Row style={styles.dataRow}>
+                <DataTable.Cell style={styles.dataFirsCel}>{category.description}</DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => navigation.navigate('ListProduct', {
+                      categoryId: category.id,
+                    })}>Produtos</TouchableOpacity>
+                </DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => navigation.navigate('UpdateCategory', {
+                      categoryId: category.id,
+                      description: category.description
+                    })}>Editar</TouchableOpacity>
+                </DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => deleteCategory(category.id)}>
+                    <Feather name="trash-2" size={25} color="#d9534f" />
+                  </TouchableOpacity>
+                </DataTable.Cell>
+              </DataTable.Row>
+            }
+          />
+        </DataTable>
+      </View>
+    </View>
+  </ScrollView>)
 }
 

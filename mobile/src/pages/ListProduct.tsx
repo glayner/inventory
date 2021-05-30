@@ -1,9 +1,10 @@
 import { Feather } from "@expo/vector-icons";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, Platform, Text, View } from 'react-native';
+import { Alert, Button, FlatList, Platform, ScrollView, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
+import styles from "./styles";
 
 interface IProps {
   navigation: any
@@ -24,15 +25,19 @@ export default function ListProduct({ route, navigation }: IProps) {
   const [category, setCategory] = useState<IItens>();
   const [products, setProducts] = useState<IItens[]>([]);
 
+  async function populateProduct() {
+    axios.get(`http://localhost:3001/search/category/${categoryId}`).then(res => {
+      const productsData = res.data.products;
+      const categoryData = res.data;
+      delete categoryData.products
+      setCategory(categoryData)
+      setProducts(productsData)
+    })
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      axios.get(`http://localhost:3001/search/category/${categoryId}`).then(res => {
-        const productsData = res.data.products;
-        const categoryData = res.data;
-        delete categoryData.products
-        setCategory(categoryData)
-        setProducts(productsData)
-      })
+      populateProduct()
     });
 
     return unsubscribe;
@@ -43,7 +48,7 @@ export default function ListProduct({ route, navigation }: IProps) {
       .then(() => {
         if (Platform.OS === 'web') {
           alert("Produto excluido com sucesso!!")
-          navigation.navigate("ListCategory")
+          populateProduct()
           return
         }
 
@@ -55,7 +60,7 @@ export default function ListProduct({ route, navigation }: IProps) {
               text: "",
               onPress: () => { },
             },
-            { text: "OK", onPress: () => navigation.navigate("ListCategory") },
+            { text: "OK", onPress: () => populateProduct() },
           ],
           { cancelable: false }
         );
@@ -77,51 +82,55 @@ export default function ListProduct({ route, navigation }: IProps) {
       })
   }
 
-  return (<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>Categoria: {category?.description}</Text>
-    <Button
-      title="Criar novo produto"
-      onPress={() => navigation.navigate('CreateProduct', { categoryId })}
-    />
+  return (<ScrollView horizontal showsVerticalScrollIndicator={false} >
+    <View style={styles.container}>
+      <View style={styles.body}>
+        <Text style={styles.title}>Categoria: {category?.description}</Text>
 
-    <DataTable>
-      <DataTable.Header>
-        <DataTable.Title>Descrição</DataTable.Title>
-        <DataTable.Title>Transações</DataTable.Title>
-        <DataTable.Title>Editar</DataTable.Title>
-        <DataTable.Title>Excluir</DataTable.Title>
-      </DataTable.Header>
-      <FlatList
-        data={products}
-        keyExtractor={product => product.id}
-        renderItem={({ item: product }) =>
-          <DataTable.Row>
-            <DataTable.Cell>{product.description}</DataTable.Cell>
-            <DataTable.Cell><Button
-              title="Transações"
-              onPress={() => navigation.navigate('ListTransaction', {
-                productId: product.id,
-              })}
-            /></DataTable.Cell>
-            <DataTable.Cell><Button
-              title="Editar"
-              onPress={() => navigation.navigate('UpdateProduct', {
-                productId: product.id,
-                description: product.description,
-                categoryId
-              })}
-            /></DataTable.Cell>
+        <TouchableOpacity
+          style={styles.createBtn}
+          onPress={() => navigation.navigate('CreateProduct', { categoryId })}
+        >Criar novo produto</TouchableOpacity>
 
-            <DataTable.Cell>
-              <TouchableOpacity onPress={() => deleteProduct(product.id)}>
-                <Feather name="trash-2" size={25} color="#e02041" />
-              </TouchableOpacity>
-            </DataTable.Cell>
-          </DataTable.Row>
-        }
-      />
-    </DataTable>
-
-  </View>)
+        <DataTable style={styles.table}>
+          <DataTable.Header style={styles.dataHeader}>
+            <DataTable.Title style={styles.dataHeaderFirstTitle}>Descrição</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Transações</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Editar</DataTable.Title>
+            <DataTable.Title style={styles.dataHeaderTitle}>Excluir</DataTable.Title>
+          </DataTable.Header>
+          <FlatList
+            data={products}
+            keyExtractor={product => product.id}
+            renderItem={({ item: product }) =>
+              <DataTable.Row style={styles.dataRow}>
+                <DataTable.Cell>{product.description}</DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => navigation.navigate('ListTransaction', {
+                      productId: product.id,
+                    })}>Transação</TouchableOpacity>
+                </DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => navigation.navigate('UpdateProduct', {
+                      productId: product.id,
+                      description: product.description,
+                      categoryId
+                    })}>Editar</TouchableOpacity>
+                </DataTable.Cell>
+                <DataTable.Cell style={styles.dataCel}>
+                  <TouchableOpacity style={styles.optionBtn}
+                    onPress={() => deleteProduct(product.id)}>
+                    <Feather name="trash-2" size={25} color="#d9534f" />
+                  </TouchableOpacity>
+                </DataTable.Cell>
+              </DataTable.Row>
+            }
+          />
+        </DataTable>
+      </View>
+    </View>
+  </ScrollView>)
 }
 
