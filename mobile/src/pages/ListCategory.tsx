@@ -53,7 +53,7 @@ export default function ListCategory({ navigation }: IProps) {
         );
       })
       .catch(err => {
-        let message = err.response.data.message;
+        let message = err.response.data.message || 'Não foi possivel excluir';
         if (Platform.OS === 'web') {
           alert(message)
           return

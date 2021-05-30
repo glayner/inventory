@@ -2,7 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import axios from 'axios';
 import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, ScrollView, Text, View } from 'react-native';
+import { Alert, Button, FlatList, Platform, ScrollView, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import IProduct from '../interfaces/IProduct';
@@ -31,7 +31,42 @@ export default function ListTransaction({ route, navigation }: IProps) {
   }, [navigation]);
 
   async function deleteTransaction(id: string) {
-    alert('aqui')
+    await axios.delete(`http://localhost:3001/manage/transaction/${id}`)
+      .then(() => {
+        if (Platform.OS === 'web') {
+          alert("Transação excluida com sucesso!!")
+          navigation.navigate("ListCategory")
+          return
+        }
+
+        Alert.alert(
+          "Sucesso",
+          "Transação excluida com sucesso!!",
+          [
+            {
+              text: "",
+              onPress: () => { },
+            },
+            { text: "OK", onPress: () => navigation.navigate("ListCategory") },
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch(err => {
+        let message = err.response.data.message || 'Não foi possivel excluir';
+        if (Platform.OS === 'web') {
+          alert(message)
+          return
+        }
+
+        Alert.alert("Erro", `${message}`, [
+          {
+            text: "Ok",
+            onPress: () => { },
+            style: "cancel",
+          },
+        ]);
+      })
   }
 
 
